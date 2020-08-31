@@ -14,18 +14,8 @@
 #   Test Package:              'Ctrl + Shift + T'
 
 aou_tables <- function() {
- t<-bigrbq_dataset_tables(Sys.getenv('WORKSPACE_CDR'))
-
-
-  pluck(t[[1]],table)
-
-  names(t[[1]])
-
-  t[[1]]
-  #map(t,str)
-  #map_chr(t,table)
-  tbls=map(t,'table') %>% unlist()
+  t<-bigrquery::bq_dataset_tables(Sys.getenv('WORKSPACE_CDR'))
+  tbls=unlist(purrr::map(t,'table'))
   tbls
-  data.frame(tbl=tbls)
 
 }

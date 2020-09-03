@@ -95,3 +95,40 @@ aou_tbl_fields<-function(table){
   out
 }
 
+
+
+
+
+#' Generate list of tables and columns
+#'
+#' @return data.frame with data dictionary
+#' @export
+aou_getDd<-function(){
+  t<-bigrquery::bq_dataset_tables(Sys.getenv('WORKSPACE_CDR'))
+  #t[[1]]$table
+  #f=bq_table_fields(t[[1]])
+
+  #str(f)
+  #f
+  #f[[1]]
+
+  parse<-function(table) {
+    f=bq_table_fields(table)
+
+    #writeLines(table$table)
+    Sys.sleep(0.2)
+    data.frame(table=table$table,name=map_chr(f,'name'),type=map_chr(f,'type'),mode=map_chr(f,'mode'), description=(map_chr(f,'description')))
+  }
+  #parse(t[[2]])
+  length(t)
+  #lm=map(sample(t,80),parse)
+  #lm=map(head(t,80),parse)
+  lm=map(t,parse)
+
+
+  ln=bind_rows(lm)
+  ln
+  #as.data.frame(ln)
+  #nrow(ln)
+}
+

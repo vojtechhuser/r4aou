@@ -13,6 +13,12 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
+#' List tables in the database
+#'
+#' @return
+#' @export
+#'
+#' @examples
 aou_tables <- function() {
   cdmDatabaseSchema=Sys.getenv('WORKSPACE_CDR')
   t<-bigrquery::bq_dataset_tables(Sys.getenv('WORKSPACE_CDR'))
@@ -21,6 +27,14 @@ aou_tables <- function() {
 
 }
 
+#' Run query
+#'
+#' @param sql
+#'
+#' @return
+#' @export
+#'
+#' @examples
 aou_run <-function(sql){
   billing=Sys.getenv('GOOGLE_PROJECT')
   cdmDatabaseSchema=Sys.getenv('WORKSPACE_CDR')
@@ -64,7 +78,7 @@ aou_write<-function(data,destination_filename){
 
 
   # store the dataframe in current workspace
-  write_excel_csv(data, destination_filename)
+  readr::write_excel_csv(data, destination_filename)
 
   # Get the bucket name
   my_bucket <- Sys.getenv('WORKSPACE_BUCKET')
@@ -84,8 +98,8 @@ aou_write<-function(data,destination_filename){
 #' @return data frame with fields and type and description
 #' @export
 aou_tbl_fields<-function(table){
-  cdm2=map_chr(stringr::str_split(Sys.getenv('WORKSPACE_CDR'),pattern = '\\.'),c(2))
-  project2=map_chr(stringr::str_split(Sys.getenv('WORKSPACE_CDR'),pattern = '\\.'),c(1))
+  cdm2=purrr::map_chr(stringr::str_split(Sys.getenv('WORKSPACE_CDR'),pattern = '\\.'),c(2))
+  project2=purrr::map_chr(stringr::str_split(Sys.getenv('WORKSPACE_CDR'),pattern = '\\.'),c(1))
 
   bqtable=list(projectId=project2,datasetId=cdm2,tableId=table)
   #bqtable
@@ -113,17 +127,20 @@ aou_getDd<-function(){
   #f[[1]]
 
   parse<-function(table) {
-    f=bq_table_fields(table)
+    f=bigrquery::bq_table_fields(table)
 
     #writeLines(table$table)
     Sys.sleep(0.2)
-    data.frame(table=table$table,name=map_chr(f,'name'),type=map_chr(f,'type'),mode=map_chr(f,'mode'), description=(map_chr(f,'description')))
+    data.frame(table=table$table,name=purrr::map_chr(f,'name')
+               ,type=purrr::map_chr(f,'type')
+               ,mode=purrr::map_chr(f,'mode')
+               ,description=(purrr::map_chr(f,'description')))
   }
   #parse(t[[2]])
   #length(t)
   #lm=map(sample(t,80),parse)
   #lm=map(head(t,80),parse)
-  lm=map(t,parse)
+  lm=purrr::map(t,parse)
 
 
   ln=dplyr::bind_rows(lm)

@@ -120,13 +120,13 @@ aou_getDd<-function(){
     data.frame(table=table$table,name=map_chr(f,'name'),type=map_chr(f,'type'),mode=map_chr(f,'mode'), description=(map_chr(f,'description')))
   }
   #parse(t[[2]])
-  length(t)
+  #length(t)
   #lm=map(sample(t,80),parse)
   #lm=map(head(t,80),parse)
   lm=map(t,parse)
 
 
-  ln=bind_rows(lm)
+  ln=dplyr::bind_rows(lm)
   ln
   #as.data.frame(ln)
   #nrow(ln)

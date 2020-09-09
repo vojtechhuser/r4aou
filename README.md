@@ -9,6 +9,7 @@ R package for tasks inside All of Us Workbench  (AllofUs or AOU)
     
 # Sample use
 
+    aou_tables()
 
 # Initial code for notebook
 

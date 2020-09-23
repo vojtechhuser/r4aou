@@ -40,7 +40,13 @@ aou_run <-function(sql){
   cdmDatabaseSchema=Sys.getenv('WORKSPACE_CDR')
   sql <- SqlRender::render(sql,cdmDatabaseSchema=cdmDatabaseSchema)
   sql <- SqlRender::translate(sql,targetDialect = 'bigquery')
-  sql=stringr::str_replace_all(sql,'r2019q4r3','R2019Q4R3')
+  #below has error Warning message in stringr::str_replace_all(sql, "r2019q4r3", "R2019Q4R3"):
+     #Error in stringr::str_replace_all(sql, "r2019q4r3", "R2019Q4R3"): lazy-load database '/usr/local/lib/R/site-library/stringi/R/stringi.rdb' is corrupt
+  #sql=stringr::str_replace_all(sql,'r2019q4r3','R2019Q4R3')
+
+  #using base R instead  
+  sql=gsub("r2019q4r3", "R2019Q4R3", sql)
+
   #cat(sql)
   q <- bigrquery::bq_project_query(billing, sql)
   out<-bigrquery::bq_table_download(q)

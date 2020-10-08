@@ -96,6 +96,30 @@ aou_write<-function(data,destination_filename){
   #system(paste0("gsutil ls ", my_bucket, "/data/*.csv"), intern=T)
 }
 
+#' Write rds data into bucket
+#'
+#' @param data data frame with the data
+#' @param destination_filename  name of the file to store the data
+#'
+#' @return
+#' @export
+aou_write_rds<-function(data,destination_filename){
+
+
+  # store the dataframe in current workspace
+  readr::write_rds(data, destination_filename,compress='xz')
+
+  # Get the bucket name
+  my_bucket <- Sys.getenv('WORKSPACE_BUCKET')
+
+  # Copy the file from current workspace to the bucket
+  system(paste0("gsutil cp ./", destination_filename, " ", my_bucket, "/data/"), intern=T)
+
+  # Check if file is in the bucket
+  #system(paste0("gsutil ls ", my_bucket, "/data/*.csv"), intern=T)
+}
+
+
 
 #' List columns of a table
 #'

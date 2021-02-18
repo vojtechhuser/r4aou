@@ -45,7 +45,7 @@ aou_run <-function(sql){
   #sql=stringr::str_replace_all(sql,'r2019q4r3','R2019Q4R3')
 
   #using base R instead  
-  sql=gsub("r2019q4r3", "R2019Q4R3", sql)
+  sql=gsub("r2020q4r2", "R2020Q4R2", sql)
 
   #cat(sql)
   q <- bigrquery::bq_project_query(billing, sql)
